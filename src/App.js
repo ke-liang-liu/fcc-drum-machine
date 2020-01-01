@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Grid, Typography } from '@material-ui/core/';
 import DrumPad from './components/DrumPad';
 import keys from './components/Keys';
@@ -6,6 +6,22 @@ import Container from '@material-ui/core/Container';
 
 function App() {
   const [display, setDisplay] = useState(String.fromCharCode(160));
+
+  useEffect(() => {
+    function handleKeyPress(e) {
+      const key = keys.find(ele => ele.keyNum === e.keyCode)
+      if (key) {
+        updateDisplayAndSound(key.id, key.keyLetter);
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyPress);
+    console.log('addEventListener happening')
+    // Specify how to clean up after this effect:
+    return function cleanup() {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []);
 
   const updateDisplayAndSound = (str, clipLetterId) => {
     setDisplay(str);
