@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Typography } from '@material-ui/core/';
-import DrumPad from './components/DrumPad';
+import { Grid, Typography, Button, Container } from '@material-ui/core/';
 import keys from './components/Keys';
-import Container from '@material-ui/core/Container';
+
+const DrumPad = (props) => {
+  const onClickHandler = () => {
+    props.updateDisplayAndSound(props.keyObj.id, props.keyObj.keyLetter);
+  }
+  return (
+    <Button
+      style={{ height: 90 }}
+      variant='contained'
+      onClick={onClickHandler}
+      fullWidth
+    >
+      {props.keyObj.keyLetter}
+    </Button>
+  );
+}
 
 function App() {
   const [display, setDisplay] = useState(String.fromCharCode(160));
-
   useEffect(() => {
     function handleKeyPress(e) {
       const key = keys.find(ele => ele.keyNum === e.keyCode)
@@ -16,7 +29,6 @@ function App() {
     }
 
     document.addEventListener('keydown', handleKeyPress);
-    console.log('addEventListener happening')
     // Specify how to clean up after this effect:
     return function cleanup() {
       document.removeEventListener('keydown', handleKeyPress);
